@@ -13,14 +13,19 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fakhar21.snack30f80ff751b64611bbcaa80ff34180f4",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.fakhar21.snack30f80ff751b64611bbcaa80ff34180f4"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +34,12 @@
       "eas": {
         "projectId": "6b61aa93-2bef-493e-9868-756bdf2422d7"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6b61aa93-2bef-493e-9868-756bdf2422d7"
     }
   }
 }
