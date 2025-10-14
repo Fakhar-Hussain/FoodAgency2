@@ -41,14 +41,14 @@ const CustomTopBar = ({
         if (showBackButton) {
             return (
                 <TouchableOpacity onPress={onLeftPress || handleBackPress} style={styles.iconContainer}>
-                    <Ionicons name="chevron-back" size={26} color="#333" />
+                    <Ionicons name="chevron-back" size={16} color="#333" />
                 </TouchableOpacity>
             );
         }
         if (leftIconName) {
             return (
                 <TouchableOpacity onPress={onLeftPress} style={styles.iconContainer}>
-                    <Ionicons name={leftIconName} size={24} color="#333" />
+                    <Ionicons name={leftIconName} size={20} color="#333" />
                 </TouchableOpacity>
             );
         }
@@ -61,7 +61,7 @@ const CustomTopBar = ({
         if (rightIconName) {
             return (
                 <TouchableOpacity onPress={onRightPress} style={styles.iconContainer}>
-                    <Ionicons name={rightIconName} size={24} color="#333" />
+                    <Ionicons name={rightIconName} size={20} color="#333" />
                 </TouchableOpacity>
             );
         }
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 55, // Standard height
+        height: 50, // Standard height
     },
     iconContainer: {
         width: 40, // Icons ke liye fixed area
@@ -122,11 +122,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     titleText: {
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: 14,
         color: '#333',
         maxWidth: '90%',
+        letterSpacing: 0.8,
+        fontWeight: 400,
     },
+    
 });
 
 export default CustomTopBar;

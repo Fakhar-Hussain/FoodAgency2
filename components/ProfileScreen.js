@@ -17,27 +17,6 @@ const { width } = Dimensions.get('window');
 
 // --- Profile Options Data ---
 const profileOptions = [
-  // { 
-  //   id: '12', 
-  //   name: 'My Orders', 
-  //   icon: 'bag-handle-outline', 
-  //   library: Ionicons, 
-  //   screen: 'OrderHistory' 
-  // },
-  // { 
-  //   id: '13', 
-  //   name: 'My Orders', 
-  //   icon: 'bag-handle-outline', 
-  //   library: Ionicons, 
-  //   screen: 'OrderHistory' 
-  // },
-  // { 
-  //   id: '14', 
-  //   name: 'My Orders', 
-  //   icon: 'bag-handle-outline', 
-  //   library: Ionicons, 
-  //   screen: 'OrderHistory' 
-  // },
   { 
     id: '1', 
     name: 'My Orders', 
@@ -156,12 +135,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 100, // Bottom navigation ke liye space
   },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 30,
-  },
 
   // --- User Info Card Styles ---
   userInfoCard: {
@@ -193,7 +166,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   userEmail: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#888',
     marginTop: 2,
   },

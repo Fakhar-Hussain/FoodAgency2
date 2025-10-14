@@ -18,28 +18,49 @@ const { width } = Dimensions.get('window');
 // --- DUMMY DATA ---
 const INITIAL_CART_ITEMS = [
   {
-    id: 'c1',
-    name: 'Cheese Burger Combo',
-    price: 15.0,
-    quantity: 1,
-    image:
-      'https://i.pinimg.com/564x/b8/a7/5e/b8a75e580a202cce7ac6bc3693e96672.jpg',
+    id: 'P104',
+    name: 'BBQ Pulled Sandwich',
+    price: 16.75,
+    quantity: 4,
+    description: 'Slow-cooked pulled beef bathed in smoky BBQ sauce, topped with coleslaw and pickles on a toasted bun.',
+    rating: 4.3,
+    reviews: 150,
+    image: 'https://thumbs.dreamstime.com/b/sandwich-isolated-white-background-43370002.jpg',
+    isFavorite: false,
+    calories: 850,
+    prepTime: '25-35 min',
+    location: '12 Yellow Path',
+    restaurantName: 'The Smokehouse',
   },
   {
-    id: 'c2',
-    name: 'Grilled Chicken Salad',
-    price: 12.5,
-    quantity: 2,
-    image:
-      'https://www.eatingbirdfood.com/wp-content/uploads/2023/06/grilled-chicken-salad-hero.jpg',
+    id: 'P107',
+    name: 'Chocolate Lava Cake',
+    price: 9.50,
+    quantity: 1,
+    description: 'Warm, gooey chocolate cake with a molten center, served with vanilla bean ice cream.',
+    rating: 4.9,
+    reviews: 550,
+    image: 'https://www.shutterstock.com/image-photo/lava-cake-chocolate-coming-out-600nw-2500970875.jpg',
+    isFavorite: true,
+    calories: 550,
+    prepTime: '5-10 min',
+    location: '17 Purple Place',
+    restaurantName: 'Sweet Delights',
   },
   {
-    id: 'c3',
-    name: 'Large Margherita Pizza',
-    price: 18.99,
-    quantity: 1,
-    image:
-      'https://uk.ooni.com/cdn/shop/articles/20220211142645-margherita-9920_e41233d5-dcec-461c-b07e-03245f031dfe.jpg?crop=center&height=800&v=1737105431&width=800',
+    id: 'P108',
+    name: 'Chicken Tikka',
+    price: 19.99,
+    quantity: 3,
+    description: 'Tender chunks of chicken marinated in spices and yogurt, baked and served in a creamy, richly flavored tomato sauce.',
+    rating: 4.4,
+    reviews: 280,
+    image: 'https://thumbs.dreamstime.com/b/fresh-chicken-tikka-kebab-isolated-white-background-fresh-chicken-tikka-kebab-isolated-white-background-357050525.jpg',
+    isFavorite: false,
+    calories: 910,
+    prepTime: '35-45 min',
+    location: '9 Green Valley',
+    restaurantName: 'Spice Route',
   },
 ];
 
@@ -102,19 +123,23 @@ const CartScreen = ({ navigation }) => {
         <Text style={styles.productName} numberOfLines={1}>
           {item.name}
         </Text>
-        <Text style={styles.companyText}>Los Polos Harmanos</Text>
-        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-      </View>
+        <Text style={styles.companyText}>{item.restaurantName}</Text>
 
       {/* 3. Right Quantity & Remove Button */}
-      <View style={styles.quantityControlContainer}>
-        <TouchableOpacity onPress={() => updateQuantity(item.id, -1)}>
-          <Ionicons name="remove-circle-outline" size={24} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.quantityText}>{item.quantity}</Text>
-        <TouchableOpacity onPress={() => updateQuantity(item.id, 1)}>
-          <Ionicons name="add-circle-outline" size={24} color="#333" />
-        </TouchableOpacity>
+      <View style={styles.quantityContainer}>
+        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+        <View style={styles.quantityControlContainer}>
+          <TouchableOpacity onPress={() => updateQuantity(item.id, -1)} 
+            style={styles.quantityBtn}>
+            <Ionicons name="remove" size={16} color="#fff" />
+          </TouchableOpacity>
+          <Text style={styles.quantityText}>{item.quantity}</Text>
+          <TouchableOpacity onPress={() => updateQuantity(item.id, 1)} 
+            style={styles.quantityBtn}>
+            <Ionicons name="add" size={16} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </View>
 
         <TouchableOpacity
           style={styles.removeIcon}
@@ -247,23 +272,25 @@ const styles = StyleSheet.create({
   productImage: {
     width: '100%',
     height: '100%',
-  },
+  }, 
   detailsContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingLeft: 15,
   },
   productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    letterSpacing: 0.8,
+    fontWeight: 400,
     color: '#333',
   },
   productPrice: {
     fontSize: 18,
     color: '#333',
     letterSpacing: 0.8,
-    marginTop: 5,
-    marginLeft: 2,
+    marginTop: 2,
+    fontWeight: 400,
+    marginLeft: 2
   },
   companyText: {
     fontSize: 12,
@@ -272,24 +299,37 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginLeft: 2,
   },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'relative',
+  },
   quantityControlContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    width: 70,
     position: 'relative',
-    paddingTop: 40,
-    // backgroundColor: "red"
+    width: 70,
   },
   quantityText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
+  quantityBtn: {
+    width:"20px",
+    height:"20px", 
+    borderRadius: 3, 
+    backgroundColor: "#333", 
+    alignItems: "center", 
+    justifyContent: "center",
+  },
+
   removeIcon: {
     position: 'absolute',
-    top: 0,
-    right: 0,
+    top: -3,
+    right: -3,
     backgroundColor: 'white',
     borderRadius: 50,
   },

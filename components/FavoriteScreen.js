@@ -225,7 +225,7 @@ const FavoriteScreen = ({ navigation }) => {
             <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
         </View>
         
-        <Text style={styles.companyText}>Restaurant Name</Text>
+        <Text style={styles.companyText}>{item.restaurantName}</Text>
         
         <View style={styles.locationRow}>
             <Ionicons name="location-outline" size={14} color="#888" />
@@ -312,27 +312,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
   },
-  favoriteButton: {
-    // position: 'absolute',
-    // backgroundColor: '#FF5733',
-    // borderRadius: 50,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 2,
-    // elevation: 3,
-    // height: 25,
-    // width: 25,
-    // alignItems: "center",
-    // justifyContent: "center"
-    zIndex: 10,
-    top: 10, 
-    right: 5, 
-    position: 'absolute',
-    backgroundColor: 'white',
-    borderRadius: 50,
-  },
-
   // 2. Details Section
   detailsContainer: {
     width: '65%', 
@@ -345,10 +324,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    letterSpacing: 0.8,
+    fontWeight: 400,
     color: '#333',
-    maxWidth: '70%', 
+  },
+  productPrice: {
+    fontSize: 18,
+    color: '#333',
+    letterSpacing: 0.8,
+    marginTop: 2,
+    fontWeight: 400,
+    marginLeft: 2
   },
   companyText: {
     fontSize: 12,
@@ -375,12 +362,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 5,
-  },
-  productPrice: {
-    fontSize: 18,
-    color: '#333',
-    letterSpacing: 0.8,
-    marginLeft: 2,
   },
   addToCartButton: {
     flexDirection: 'row',

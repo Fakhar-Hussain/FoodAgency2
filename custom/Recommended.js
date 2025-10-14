@@ -77,11 +77,14 @@ const RECOMMENDED_DATA = [
 
 // ---------------------------------------------------
 
-const RecommendedScreen = () => {
+const RecommendedScreen = ({navigation}) => {
     
   // --- Recommended Item Card Component (Naye design ke mutabiq) ---
   const RecommendedCard = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} 
+      onPress={() => navigation.navigate('ItemDetail', { 
+        productData: item
+      })}>
       
       {/* 1. Left Image Section */}
       <View style={styles.imageContainer}>
@@ -104,7 +107,7 @@ const RecommendedScreen = () => {
             </View>
         </View>
         
-        <Text style={styles.companyText}>Cookie Heaven</Text>
+        <Text style={styles.companyText}>{item.restaurantName}</Text>
         
         {/* Location */}
         <View style={styles.locationRow}>
@@ -121,7 +124,7 @@ const RecommendedScreen = () => {
             </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   // --- Main Content ---

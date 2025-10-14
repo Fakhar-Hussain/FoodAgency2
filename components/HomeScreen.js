@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
         <ProductsSection/>
         <ProductScreen navigation={navigation} />
         <RecommendSection/>
-        <RecommendScreen/>
+        <RecommendScreen navigation={navigation} />
 
       </ScrollView>
     </SafeAreaView>

@@ -51,7 +51,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                     >
                         <Ionicons
                             name={isFocused ? item.activeIcon : item.icon} 
-                            size={24} 
+                            size={16} 
                             color={isFocused ? 'white' : '#888'} 
                         />
                         {isFocused && <Text style={styles.activeNavText}>{item.text}</Text>}
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'white',
-    height: 60,
+    height: 50,
     paddingHorizontal: 10,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -153,14 +153,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#333', 
     borderRadius: 50,
-    paddingHorizontal: 20,
-    height: 40,
+    paddingHorizontal: 15,
+    height: 35,
   },
   activeNavText: {
     color: 'white',
     marginLeft: 5,
     fontWeight: 'bold',
-    top: 1
+    top: 1,
+    fontSize: 12,
   },
 });
 
