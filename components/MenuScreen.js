@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,10 +7,11 @@ import {
   Image,
   Dimensions,
   FlatList,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import CustomTopBar from '../custom/CustomTopBar'; // File path adjust karein
+import CustomTopBar from '../custom/CustomTopBar'; 
 
 const { width } = Dimensions.get('window');
 
@@ -86,7 +87,7 @@ const productsData = [
     restaurantName: 'Mama Mia\'s Pizza',
   },
   {
-    id: 'P106',
+    id: 'P106',    
     name: 'Fresh Sushi Platter',
     price: 25.00,
     description: 'Assortment of fresh sashimi, nigiri, and maki rolls, served with wasabi, pickled ginger, and soy sauce.',
@@ -184,26 +185,28 @@ const productsData = [
     restaurantName: 'The Diner',
   },
 ];
-// --- End Dummy Data ---
 
 // ---------------------------------------------------
 
-const FavoriteScreen = ({ navigation }) => {
+const MenuScreen = ({ navigation }) => { // Component name changed to MenuScreen
   
-  const [favoriteItems, setFavoriteItems] = useState(productsData);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery) {
+      return productsData;
+    }
 
-  // const handleRemoveFavorite = (itemId) => {
-  //     const updatedList = favoriteItems.filter(item => item.id !== itemId);
-  //     setFavoriteItems(updatedList);
-  // };
-  // <TouchableOpacity
-  //   style={styles.favoriteButton}
-  //   onPress={() => handleRemoveFavorite(item.id, -item.quantity)}>
-  //   <Ionicons name="close-circle" size={30} color="#FF5733" />
-  // </TouchableOpacity>
+    const lowerCaseQuery = searchQuery.toLowerCase();
 
-  const FavoriteCard = ({ item }) => (
+    return productsData.filter(item => {
+      return item.name.toLowerCase().includes(lowerCaseQuery) ||
+             item.restaurantName.toLowerCase().includes(lowerCaseQuery);
+    });
+  }, [searchQuery]);
+
+  const MenuCard = ({ item }) => ( // Card component name changed to MenuCard <Ionicons name="arrow-forward" size={14} color="white" />
     <>    
     <TouchableOpacity 
         style={styles.card}
@@ -234,9 +237,12 @@ const FavoriteScreen = ({ navigation }) => {
         
         <View style={styles.bottomRow}>
             <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-            <TouchableOpacity style={styles.addToCartButton}>
-                <Ionicons name="add" size={18} color="white" />
-                <Text style={styles.addToCartText}>Add</Text>
+            <TouchableOpacity style={styles.addToCartButton}
+              onPress={() => navigation.navigate('ItemDetail', { 
+                  productData: item
+              })}
+            >
+                <Text style={styles.addToCartText}>See more</Text>
             </TouchableOpacity>
         </View>
       </View>
@@ -245,23 +251,54 @@ const FavoriteScreen = ({ navigation }) => {
   );
   
 
-  return (
-    <View style={styles.container}>   
-      <CustomTopBar
-        title="Menu"
-        leftIconName="search-outline"
-        // onLeftPress={() => navigation.navigate('Cart')}
+  const SearchBar = () => (
+    <View style={styles.searchBarContainer}>
+      <TouchableOpacity onPress={() => setIsSearching(false)} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={20} color="#333" />
+      </TouchableOpacity>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search dishes or restaurants..."
+        placeholderTextColor="#888"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        autoFocus={true}
       />
+      {searchQuery.length > 0 ? (
+        <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearButton}>
+          <Ionicons name="close-circle" size={20} color="#888" />
+        </TouchableOpacity>
+      ) :
+      (
+        <View style={styles.invisibleButton}></View>
+      )
+      }
+    </View>
+  );
+
+
+  return (
+    <View style={styles.container}>
+      {isSearching ? (
+        <SearchBar />
+      ) : (
+        <CustomTopBar
+          title="Menu"
+          leftIconName="search-outline"
+          onLeftPress={() => setIsSearching(true)}
+        />
+      )}
+      
       <FlatList
-        data={productsData}
-        renderItem={({ item }) => <FavoriteCard item={item} />}
+        data={filteredProducts} 
+        renderItem={({ item }) => <MenuCard item={item} />}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent} 
         ListEmptyComponent={() => (
             <View style={styles.emptyContainer}>
-                <Ionicons name="heart-outline" size={80} color="#ccc" />
-                <Text style={styles.emptyText}>You haven't added any items to favorites yet.</Text>
+              <Ionicons name="search-outline" size={80} color="#ccc" />
+              <Text style={styles.emptyText}>No results found.</Text>
             </View>
         )}
       />
@@ -284,8 +321,46 @@ const styles = StyleSheet.create({
       alignItems: 'center', 
       paddingHorizontal: 0, 
   },
-
-  // --- Card Styles ---
+  
+  // Search Bar Styles
+  searchBarContainer: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 0,
+    backgroundColor: '#fff', 
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+    paddingHorizontal: width * 0.05,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  backButton: {
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchInput: {
+    flex: 1,
+    height: '80%',
+    fontSize: 14,
+    color: '#333',
+    paddingHorizontal: 10,
+  },
+  clearButton: {
+    paddingLeft: 10,
+  },
+  invisibleButton: {
+    width: 30,
+  },
+  
+  // Card Styles
   card: {
     width: width * 0.90, 
     flexDirection: 'row',
@@ -300,7 +375,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 
-  // 1. Image Section
+  // Image Section
   imageContainer: {
     width: '35%', 
     height: 120,
@@ -312,7 +387,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
   },
-  // 2. Details Section
+  // Details Section
   detailsContainer: {
     width: '65%', 
     padding: 10,
@@ -367,15 +442,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#333', 
     borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    padding: 7,
     alignItems: 'center',
   },
   addToCartText: {
-    color: 'white',
-    fontSize: 14,
+    color: '#fff',
+    fontSize: 10,
     fontWeight: 'bold',
-    marginLeft: 5,
   },
   
   // Empty State Styles
@@ -383,16 +456,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "50%",
+    marginTop: 50,
+    padding: 20,
   },
   emptyText: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 15,
-    width: "80%",
-    textAlign: "center",
-    letterSpacing: 0.5
-  }
+    fontSize: 18,
+    color: '#777',
+    marginTop: 10,
+    textAlign: 'center',
+  },
 });
 
-export default FavoriteScreen;
+export default MenuScreen; 

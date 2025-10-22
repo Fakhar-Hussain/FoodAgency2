@@ -7,10 +7,11 @@ import { getFocusedRouteNameFromState } from '@react-navigation/native';
 
 import { Feather, Ionicons } from '@expo/vector-icons'; 
 import HomeScreen from '../components/HomeScreen'; 
-import FavoriteScreen from '../components/FavoriteScreen'; 
+import MenuScreen from '../components/MenuScreen'; 
 import ProfileScreen from '../components/ProfileScreen'; 
 import CartScreen from '../components/CartScreen'; 
 import ItemDetailScreen from '../components/ItemDetailScreen'; 
+import CheckoutScreen from '../components/CheckoutScreen'; 
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); 
@@ -70,7 +71,7 @@ function AppTabs() {
         screenOptions={{headerShown: false}} 
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Menu" component={FavoriteScreen} />
+      <Tab.Screen name="Menu" component={MenuScreen} />
       <Tab.Screen name="Cart" component={CartScreen} /> 
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
@@ -93,6 +94,11 @@ function RootStack() {
             <Stack.Screen 
                 name="ExtraMain" 
                 component={ExtraScreen} 
+                options={{ headerShown: false }} 
+            />
+            <Stack.Screen 
+                name="Checkout" 
+                component={CheckoutScreen} 
                 options={{ headerShown: false }} 
             />
         </Stack.Navigator>

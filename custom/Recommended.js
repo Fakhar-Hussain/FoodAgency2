@@ -118,9 +118,12 @@ const RecommendedScreen = ({navigation}) => {
         {/* Price and Add Button */}
         <View style={styles.bottomRow}>
             <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-            <TouchableOpacity style={styles.addButton}>
-                <AntDesign name="plus" size={14} color="white" />
-                <Text style={styles.addButtonText}>Add</Text>
+            <TouchableOpacity style={styles.addButton}
+              onPress={() => navigation.navigate('ItemDetail', { 
+                productData: item
+              })}
+            >
+                <Text style={styles.addButtonText}>See more</Text>
             </TouchableOpacity>
         </View>
       </View>
@@ -254,16 +257,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#333', // Dark Add Button
     borderRadius: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    // paddingHorizontal: 6,
+    padding: 7,
     alignItems: 'center',
-    marginRight: 10
+    // marginRight: 10
   },
   addButtonText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
-    marginLeft: 5,
+    // marginLeft: 5,
   },
 });
 

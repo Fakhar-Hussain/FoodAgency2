@@ -12,57 +12,73 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 import CustomTopBar from '../custom/CustomTopBar'; // File path adjust karein
+import { useCartStorage } from './UseCartStorage'; // Path adjust kar lena
 
 const { width } = Dimensions.get('window');
 
 // --- DUMMY DATA ---
-const INITIAL_CART_ITEMS = [
-  {
-    id: 'P104',
-    name: 'BBQ Pulled Sandwich',
-    price: 16.75,
-    quantity: 4,
-    description: 'Slow-cooked pulled beef bathed in smoky BBQ sauce, topped with coleslaw and pickles on a toasted bun.',
-    rating: 4.3,
-    reviews: 150,
-    image: 'https://thumbs.dreamstime.com/b/sandwich-isolated-white-background-43370002.jpg',
-    isFavorite: false,
-    calories: 850,
-    prepTime: '25-35 min',
-    location: '12 Yellow Path',
-    restaurantName: 'The Smokehouse',
-  },
-  {
-    id: 'P107',
-    name: 'Chocolate Lava Cake',
-    price: 9.50,
-    quantity: 1,
-    description: 'Warm, gooey chocolate cake with a molten center, served with vanilla bean ice cream.',
-    rating: 4.9,
-    reviews: 550,
-    image: 'https://www.shutterstock.com/image-photo/lava-cake-chocolate-coming-out-600nw-2500970875.jpg',
-    isFavorite: true,
-    calories: 550,
-    prepTime: '5-10 min',
-    location: '17 Purple Place',
-    restaurantName: 'Sweet Delights',
-  },
-  {
-    id: 'P108',
-    name: 'Chicken Tikka',
-    price: 19.99,
-    quantity: 3,
-    description: 'Tender chunks of chicken marinated in spices and yogurt, baked and served in a creamy, richly flavored tomato sauce.',
-    rating: 4.4,
-    reviews: 280,
-    image: 'https://thumbs.dreamstime.com/b/fresh-chicken-tikka-kebab-isolated-white-background-fresh-chicken-tikka-kebab-isolated-white-background-357050525.jpg',
-    isFavorite: false,
-    calories: 910,
-    prepTime: '35-45 min',
-    location: '9 Green Valley',
-    restaurantName: 'Spice Route',
-  },
-];
+// const INITIAL_CART_ITEMS = [
+//   {
+//     id: 'P103',
+//     name: 'Vegan Quinoa Salad Bowl',
+//     price: 15.00,
+//     quantity: 2,
+//     description: 'A nutritious mix of fresh quinoa, avocado, cherry tomatoes, cucumbers, and spinach with a lemon vinaigrette dressing.',
+//     rating: 4.9,
+//     reviews: 480,
+//     image: 'https://media.istockphoto.com/id/953083908/photo/chicken-salad.jpg?s=612x612&w=0&k=20&c=g1e34gZmITTubxEoWSlQYJ-P417fzy_gN6vIz8ID9TI=',
+//     isFavorite: true,
+//     calories: 450,
+//     prepTime: '10-15 min',
+//     location: '8 Blue Road',
+//     restaurantName: 'Green Grub',
+//   },
+//   {
+//     id: 'P107',
+//     name: 'Chocolate Lava Cake',
+//     price: 9.50,
+//     quantity: 1,
+//     description: 'Warm, gooey chocolate cake with a molten center, served with vanilla bean ice cream.',
+//     rating: 4.9,
+//     reviews: 550,
+//     image: 'https://www.shutterstock.com/image-photo/lava-cake-chocolate-coming-out-600nw-2500970875.jpg',
+//     isFavorite: true,
+//     calories: 550,
+//     prepTime: '5-10 min',
+//     location: '17 Purple Place',
+//     restaurantName: 'Sweet Delights',
+//   },
+//   {
+//     id: 'P106',
+//     name: 'Fresh Sushi Platter',
+//     price: 25.00,
+//     quantity: 2,
+//     description: 'Assortment of fresh sashimi, nigiri, and maki rolls, served with wasabi, pickled ginger, and soy sauce.',
+//     rating: 4.8,
+//     reviews: 410,
+//     image: 'https://media.istockphoto.com/id/177096343/photo/sushi-and-chopsticks-on-a-white-plate.jpg?s=612x612&w=0&k=20&c=ZrJGDES6fri8HnmLNFZBJY89kEbfeqCa_CkM78reYZY=',
+//     isFavorite: true,
+//     calories: 590,
+//     prepTime: '30-40 min',
+//     location: '30 Aqua Lane',
+//     restaurantName: 'Koi Pond',
+//   },
+//   {
+//     id: 'P108',
+//     name: 'Chicken Tikka',
+//     price: 19.99,
+//     quantity: 3,
+//     description: 'Tender chunks of chicken marinated in spices and yogurt, baked and served in a creamy, richly flavored tomato sauce.',
+//     rating: 4.4,
+//     reviews: 280,
+//     image: 'https://thumbs.dreamstime.com/b/fresh-chicken-tikka-kebab-isolated-white-background-fresh-chicken-tikka-kebab-isolated-white-background-357050525.jpg',
+//     isFavorite: false,
+//     calories: 910,
+//     prepTime: '35-45 min',
+//     location: '9 Green Valley',
+//     restaurantName: 'Spice Route',
+//   },
+// ];
 
 // --- Other Charges ---
 const DELIVERY_FEE = 5.0;
@@ -71,39 +87,30 @@ const TAX_RATE = 0.05; // 5% tax
 // ---------------------------------------------------
 
 const CartScreen = ({ navigation }) => {
-  const [cartItems, setCartItems] = useState(INITIAL_CART_ITEMS);
+  // const [cartItems, setCartItems] = useState(INITIAL_CART_ITEMS);
   const [subtotal, setSubtotal] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
+  const { cartItems, updateItemQuantity, deleteAllCarts, isLoading } = useCartStorage();
 
   // --- Price Calculation Logic ---
   useEffect(() => {
-    const newSubtotal = cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-    const newTaxAmount = newSubtotal * TAX_RATE;
+    if (!isLoading) {
+      const newSubtotal = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const newTaxAmount = newSubtotal * TAX_RATE;
 
-    setSubtotal(newSubtotal);
-    setTaxAmount(newTaxAmount);
-  }, [cartItems]);
+      setSubtotal(newSubtotal);
+      setTaxAmount(newTaxAmount);
+    }
+  }, [cartItems, isLoading]);
 
   const grandTotal = subtotal + taxAmount + DELIVERY_FEE;
 
   // --- Quantity Handlers ---
   const updateQuantity = (itemId, change) => {
-    setCartItems((prevItems) => {
-      const updatedItems = prevItems
-        .map((item) => {
-          if (item.id === itemId) {
-            const newQty = item.quantity + change;
-            return { ...item, quantity: newQty >= 1 ? newQty : 0 };
-          }
-          return item;
-        })
-        .filter((item) => item.quantity > 0); // Quantity 0 hone par remove ho jayega
-
-      return updatedItems;
-    });
+      updateItemQuantity(itemId, change); 
   };
 
   // --- Cart Item Card Component ---
@@ -127,7 +134,13 @@ const CartScreen = ({ navigation }) => {
 
       {/* 3. Right Quantity & Remove Button */}
       <View style={styles.quantityContainer}>
-        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+        
+        {item !== undefined && (
+            <Text style={styles.productPrice}>
+                ${(typeof item.price === 'number' ? item.price : 0).toFixed(2)} 
+            </Text>
+        )}
+
         <View style={styles.quantityControlContainer}>
           <TouchableOpacity onPress={() => updateQuantity(item.id, -1)} 
             style={styles.quantityBtn}>
@@ -154,23 +167,36 @@ const CartScreen = ({ navigation }) => {
   const EmptyCart = () => (
     <View style={styles.emptyContainer}>
       <Ionicons name="cart-outline" size={80} color="#ccc" />
-      <Text style={styles.emptyText}>Your cart is empty. Add some items!</Text>
+      <Text style={styles.emptyText}>Oops! Your cart is empty.</Text>
+      <Text style={styles.emptyTextBrief}>Let's fill it up with some great food!</Text>
       <TouchableOpacity
         style={styles.browseButton}
-        onPress={() => navigation.navigate('HomeStack')}>
-        <Text style={styles.browseButtonText}>Start Shopping</Text>
+        onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.browseButtonText}>Start Now</Text>
       </TouchableOpacity>
     </View>
   );
+
+  const DeleteAllCarts = () => {
+      deleteAllCarts();
+  }
+
+  // Loading state dikhane ke liye
+  if (isLoading) {
+      return (
+        <View style={styles.container}>
+            <Text>Loading Cart...</Text>
+        </View>
+      );
+  }
 
   // --- Main Content ---
   return (
     <View style={styles.container}>
       <CustomTopBar
         title="Cart"
-        // showBackButton={true}
-        rightIconName="basket-outline"
-        onRightPress={() => navigation.navigate('CartStack')}
+        rightIconName="trash-outline"
+        onRightPress={() => DeleteAllCarts()}
       />   
       
       {cartItems.length === 0 ? (
@@ -184,7 +210,7 @@ const CartScreen = ({ navigation }) => {
             data={cartItems}
             renderItem={({ item }) => <CartItemCard item={item} />}
             keyExtractor={(item) => item.id}
-            scrollEnabled={false} // Main ScrollView ke andar nested scrolling nahi chahiye
+            scrollEnabled={false}
             style={styles.cartList}
           />
 
@@ -220,11 +246,15 @@ const CartScreen = ({ navigation }) => {
           {/* Checkout Button */}
           <TouchableOpacity
             style={styles.checkoutButton}
-            onPress={() => console.log('Proceed to Checkout')}>
+            onPress={() => 
+              navigation.navigate('Checkout', {
+                totalAmount: grandTotal,
+                subtotal: subtotal,
+                taxAmount: taxAmount,
+                deliveryCharges: DELIVERY_FEE,
+              })
+            }>
             <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
-            <Text style={styles.checkoutButtonText}>
-              ${grandTotal.toFixed(2)}
-            </Text>
           </TouchableOpacity>
         </ScrollView>
       )}
@@ -283,6 +313,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     fontWeight: 400,
     color: '#333',
+    maxWidth: '70%',
   },
   productPrice: {
     fontSize: 18,
@@ -360,11 +391,14 @@ const styles = StyleSheet.create({
   summaryLabel: {
     fontSize: 14,
     color: '#666',
+    fontWeight: '400',
+    letterSpacing: 0.8
   },
   summaryValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#333',
+    letterSpacing: 0.8
   },
   divider: {
     borderBottomWidth: 1,
@@ -373,51 +407,60 @@ const styles = StyleSheet.create({
   },
   totalLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: '#333',
+    letterSpacing: 0.8
   },
   totalValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
     color: '#333',
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.8
   },
 
   // --- Checkout Button ---
   checkoutButton: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     backgroundColor: '#333',
     borderRadius: 10,
-    paddingVertical: 12.5,
-    paddingHorizontal: 25,
+    padding: 10,
     alignItems: 'center',
   },
   checkoutButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '400',
+    letterSpacing: 0.8
   },
 
   // --- Empty State Styles ---
   emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "50%",
+    margin: "auto",
   },
   emptyText: {
     fontSize: 14,
     color: '#888',
     marginTop: 15,
-    width: "80%",
     textAlign: "center",
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
+  },
+  emptyTextBrief: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 3,
+    textAlign: "center",
+    letterSpacing: 0.8,
     marginBottom: 20,
   },
+
   browseButton: {
     backgroundColor: '#333',
     paddingHorizontal: 30,
     paddingVertical: 10,
-    borderRadius: 7,
+    borderRadius: 5,
   },
   browseButtonText: {
     color: 'white',

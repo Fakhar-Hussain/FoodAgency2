@@ -81,8 +81,8 @@ const ProfileScreen = ({ navigation }) => {
             <CustomTopBar
               title="Profile"
               // showBackButton={true}
-              rightIconName="basket-outline"
-              onRightPress={() => navigation.navigate('CartStack')}
+              // rightIconName="basket-outline"
+              // onRightPress={() => navigation.navigate('CartStack')}
             />   
             <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
                 
@@ -94,8 +94,8 @@ const ProfileScreen = ({ navigation }) => {
                         style={styles.profileImage}
                     />
                     <View style={styles.userInfoText}>
-                        <Text style={styles.userName}>Ali Khan</Text>
-                        <Text style={styles.userEmail}>ali.khan@example.com</Text>
+                        <Text style={styles.userName}>John Smith</Text>
+                        <Text style={styles.userEmail}>john_smith@email.com</Text>
                     </View>
                     <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>
                         <Feather name="edit-3" size={20} color="#333" />
@@ -228,10 +228,11 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   logoutText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
     marginLeft: 10,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '400',
+    letterSpacing: 0.8
   },
 });
 

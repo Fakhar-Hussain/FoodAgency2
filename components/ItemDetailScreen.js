@@ -10,7 +10,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import CustomTopBar from '../custom/CustomTopBar'; // Assuming your CustomTopBar file path is correct
+import CustomTopBar from '../custom/CustomTopBar';
+import { useCartStorage } from './UseCartStorage';
 
 const { width } = Dimensions.get('window');
 const IMAGE_HEIGHT = width * 0.9;
@@ -19,11 +20,13 @@ const IMAGE_HEIGHT = width * 0.9;
 const DUMMY_ITEM = {
   id: 'd1',
   name: 'Premium Classic Cheeseburger',
-  price: 18.50,
-  description: 'A masterpiece of taste: juicy 100% beef patty, melted cheddar cheese, fresh lettuce, tomato, and our signature secret sauce, all nestled in a toasted brioche bun. Served with a side of crispy seasoned fries.',
+  price: 18.5,
+  description:
+    'A masterpiece of taste: juicy 100% beef patty, melted cheddar cheese, fresh lettuce, tomato, and our signature secret sauce, all nestled in a toasted brioche bun. Served with a side of crispy seasoned fries.',
   rating: 4.7,
   reviews: 350,
-  image: 'https://i.pinimg.com/564x/b8/a7/5e/b8a75e580a202cce7ac6bc3693e96672.jpg',
+  image:
+    'https://i.pinimg.com/564x/b8/a7/5e/b8a75e580a202cce7ac6bc3693e96672.jpg',
   isFavorite: true,
   calories: 780,
   prepTime: '20-30 min',
@@ -32,40 +35,43 @@ const DUMMY_ITEM = {
 // ---------------------------------------------------
 
 const ItemDetailScreen = ({ route, navigation }) => {
-  let data = route.params.productData
-  const item = data; 
-
+  let data = route.params.productData;
+  const item = data;
+  // *** Hook use kiya ***
+  const { addToCart } = useCartStorage();
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(item.isFavorite);
 
   const handleQuantityChange = (change) => {
-    setQuantity(prevQty => {
+    setQuantity((prevQty) => {
       const newQty = prevQty + change;
       return newQty > 0 ? newQty : 1;
     });
   };
 
   const handleAddToCart = () => {
-    const totalAmount = item.price * quantity;
-    console.log(`Added ${quantity} of ${item.name} to cart. Total: $${totalAmount.toFixed(2)}`);
-    // Add logic to navigate to Cart or show a success message
-    // navigation.navigate('CartStack'); 
+    const productToAdd = {
+      ...item,
+      quantity: quantity,
+    };
+
+    // *** Item ko AsyncStorage state mein add kiya ***
+    addToCart(productToAdd);
+
+    // Cart screen pe navigate kiya
+    navigation.navigate('MainTabs', { screen: 'Cart' });
   };
 
   return (
     <View style={styles.mainWrapper}>
-        
       {/* Custom Top Bar (Absolute positioning use karenge taake image ke upar aaye) */}
       <View style={styles.absoluteHeaderContainer}>
-          <CustomTopBar
-              showBackButton={true}
-              title="Details" 
-          />
+        <CustomTopBar showBackButton={true} title="Details" />
       </View>
 
-
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
         {/* 1. Image Section */}
         <View style={styles.imageSection}>
           <Image
@@ -74,26 +80,27 @@ const ItemDetailScreen = ({ route, navigation }) => {
             resizeMode="cover"
           />
           {/* Favorite Button on Image */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.favoriteButton}
-            onPress={() => setIsFavorite(!isFavorite)}
-          >
-            <Ionicons 
-                name={isFavorite ? "heart-sharp" : "heart-outline"} 
-                size={24} 
-                color={isFavorite ? "#FF5733" : "#333"} 
-            /> 
+            onPress={() => setIsFavorite(!isFavorite)}>
+            <Ionicons
+              name={isFavorite ? 'heart-sharp' : 'heart-outline'}
+              size={24}
+              color={isFavorite ? '#FF5733' : '#333'}
+            />
           </TouchableOpacity>
         </View>
 
         {/* 2. Details Section */}
         <View style={styles.detailsSection}>
           <Text style={styles.productName}>{item.name}</Text>
-          
+
           {/* Rating and Reviews */}
           <View style={styles.ratingRow}>
             <Ionicons name="star" size={18} color="#fba519" />
-            <Text style={styles.ratingText}>{item.rating.toFixed(1)} ({item.reviews} reviews)</Text>
+            <Text style={styles.ratingText}>
+              {item.rating.toFixed(1)} ({item.reviews} reviews)
+            </Text>
           </View>
 
           {/* Price */}
@@ -102,46 +109,47 @@ const ItemDetailScreen = ({ route, navigation }) => {
           {/* Description */}
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.descriptionText}>{item.description}</Text>
-          
+
           {/* Additional Info Row */}
           <View style={styles.infoRow}>
             {/* Prep Time */}
             <View style={styles.infoBox}>
-                <Ionicons name="time-outline" size={20} color="#333" />
-                <Text style={styles.infoText}>{item.prepTime}</Text>
-                <Text style={styles.infoLabel}>Prep Time</Text>
+              <Ionicons name="time-outline" size={20} color="#333" />
+              <Text style={styles.infoText}>{item.prepTime}</Text>
+              <Text style={styles.infoLabel}>Prep Time</Text>
             </View>
-            
+
             {/* Calories */}
             <View style={styles.infoBox}>
-                <Feather name="zap" size={20} color="#333" />
-                <Text style={styles.infoText}>{item.calories}</Text>
-                <Text style={styles.infoLabel}>Calories</Text>
+              <Feather name="zap" size={20} color="#333" />
+              <Text style={styles.infoText}>{item.calories}</Text>
+              <Text style={styles.infoLabel}>Calories</Text>
             </View>
           </View>
-          
         </View>
       </ScrollView>
 
       {/* 3. Bottom Action Bar (Fixed at the bottom) */}
       <View style={styles.bottomBar}>
-        
         {/* Quantity Selector */}
         <View style={styles.quantitySelector}>
-          <TouchableOpacity onPress={() => handleQuantityChange(-1)} style={styles.qtyButton}>
+          <TouchableOpacity
+            onPress={() => handleQuantityChange(-1)}
+            style={styles.qtyButton}>
             <Ionicons name="remove-outline" size={22} color="#333" />
           </TouchableOpacity>
           <Text style={styles.quantityText}>{quantity}</Text>
-          <TouchableOpacity onPress={() => handleQuantityChange(1)} style={styles.qtyButton}>
+          <TouchableOpacity
+            onPress={() => handleQuantityChange(1)}
+            style={styles.qtyButton}>
             <Ionicons name="add-outline" size={22} color="#333" />
           </TouchableOpacity>
         </View>
 
         {/* Add to Cart Button */}
-        <TouchableOpacity 
-            style={styles.addToCartButton}
-            onPress={handleAddToCart}
-        >
+        <TouchableOpacity
+          style={styles.addToCartButton}
+          onPress={handleAddToCart}>
           <Text style={styles.addToCartText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>
@@ -156,12 +164,12 @@ const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
     backgroundColor: 'white',
-    position: "absolute",
-    height: "100%",
-    width: "100%",
-    paddingVertical: "10%"
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    paddingVertical: '10%',
   },
-  
+
   // Custom Header ko image ke upar laane ke liye zaroori hai
   absoluteHeaderContainer: {
     position: 'absolute',
@@ -169,7 +177,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10,
-    backgroundColor: 'transparent', 
+    backgroundColor: 'transparent',
   },
 
   scrollContent: {
@@ -180,14 +188,14 @@ const styles = StyleSheet.create({
   // 1. Image Section
   imageSection: {
     width: '90%',
-    height: "70%",
+    height: '70%',
     backgroundColor: '#fff',
-    margin: "auto"
+    margin: 'auto',
   },
   productImage: {
     width: '100%',
     height: '80%',
-    margin: "auto"
+    margin: 'auto',
   },
   favoriteButton: {
     position: 'absolute',
@@ -208,10 +216,10 @@ const styles = StyleSheet.create({
     padding: width * 0.05,
     backgroundColor: 'white',
     // Image ke neeche round corners dene ke liye
-    borderTopLeftRadius: 30, 
+    borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    marginTop: -30, 
-    minHeight: 200, 
+    marginTop: -30,
+    minHeight: 200,
   },
   productName: {
     fontSize: 28,
@@ -255,7 +263,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
-    marginBottom: "10%",
+    marginBottom: '10%',
     paddingVertical: 15,
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',
@@ -277,7 +285,7 @@ const styles = StyleSheet.create({
 
   // 3. Bottom Action Bar
   bottomBar: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
@@ -320,7 +328,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 30,
-    // width: width * 0.55, 
+    // width: width * 0.55,
   },
   addToCartText: {
     color: 'white',

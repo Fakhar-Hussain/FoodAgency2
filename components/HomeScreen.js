@@ -59,7 +59,6 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <CustomTopBar
         title="Home"
-        leftIconName="search-outline"
         rightIconName="restaurant-outline"
         onRightPress={() => navigation.navigate('Menu')}
       />

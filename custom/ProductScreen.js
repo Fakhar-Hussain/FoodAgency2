@@ -219,8 +219,17 @@ const ProductScreen = ({navigation}) => {
         </View>
         <Text style={styles.productPrice}>${product.price}</Text>
       </View>
-      <TouchableOpacity style={styles.addButton}>
-        <AntDesign name="plus" size={14} color="white" style={{ paddingTop: 1,}} />
+      <TouchableOpacity style={styles.addButton}
+        onPress={() => navigation.navigate('ItemDetail', { 
+            productData: product
+        })}
+      >
+        <AntDesign 
+          name="right" 
+          size={14} 
+          color="white" 
+          style={{ paddingTop: 1,}} 
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );
