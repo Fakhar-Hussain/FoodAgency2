@@ -16,22 +16,6 @@ import { useCartStorage } from './UseCartStorage';
 const { width } = Dimensions.get('window');
 const IMAGE_HEIGHT = width * 0.9;
 
-// --- DUMMY ITEM DATA ---
-const DUMMY_ITEM = {
-  id: 'd1',
-  name: 'Premium Classic Cheeseburger',
-  price: 18.5,
-  description:
-    'A masterpiece of taste: juicy 100% beef patty, melted cheddar cheese, fresh lettuce, tomato, and our signature secret sauce, all nestled in a toasted brioche bun. Served with a side of crispy seasoned fries.',
-  rating: 4.7,
-  reviews: 350,
-  image:
-    'https://i.pinimg.com/564x/b8/a7/5e/b8a75e580a202cce7ac6bc3693e96672.jpg',
-  isFavorite: true,
-  calories: 780,
-  prepTime: '20-30 min',
-};
-
 // ---------------------------------------------------
 
 const ItemDetailScreen = ({ route, navigation }) => {
@@ -157,7 +141,6 @@ const ItemDetailScreen = ({ route, navigation }) => {
   );
 };
 
-// <Text style={styles.addToCartText}>${(item.price * quantity).toFixed(2)}</Text>
 // ---------------------------------------------------
 
 const styles = StyleSheet.create({
@@ -170,7 +153,6 @@ const styles = StyleSheet.create({
     paddingVertical: '10%',
   },
 
-  // Custom Header ko image ke upar laane ke liye zaroori hai
   absoluteHeaderContainer: {
     position: 'absolute',
     top: 0,
@@ -181,8 +163,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: 120, // Bottom Bar ke liye space
-    // marginBottom: "20%"
+    paddingBottom: 120, 
   },
 
   // 1. Image Section

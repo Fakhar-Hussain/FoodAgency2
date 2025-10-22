@@ -11,83 +11,17 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import CustomTopBar from '../custom/CustomTopBar'; // File path adjust karein
-import { useCartStorage } from './UseCartStorage'; // Path adjust kar lena
+import CustomTopBar from '../custom/CustomTopBar';
+import { useCartStorage } from './UseCartStorage';
 
 const { width } = Dimensions.get('window');
 
-// --- DUMMY DATA ---
-// const INITIAL_CART_ITEMS = [
-//   {
-//     id: 'P103',
-//     name: 'Vegan Quinoa Salad Bowl',
-//     price: 15.00,
-//     quantity: 2,
-//     description: 'A nutritious mix of fresh quinoa, avocado, cherry tomatoes, cucumbers, and spinach with a lemon vinaigrette dressing.',
-//     rating: 4.9,
-//     reviews: 480,
-//     image: 'https://media.istockphoto.com/id/953083908/photo/chicken-salad.jpg?s=612x612&w=0&k=20&c=g1e34gZmITTubxEoWSlQYJ-P417fzy_gN6vIz8ID9TI=',
-//     isFavorite: true,
-//     calories: 450,
-//     prepTime: '10-15 min',
-//     location: '8 Blue Road',
-//     restaurantName: 'Green Grub',
-//   },
-//   {
-//     id: 'P107',
-//     name: 'Chocolate Lava Cake',
-//     price: 9.50,
-//     quantity: 1,
-//     description: 'Warm, gooey chocolate cake with a molten center, served with vanilla bean ice cream.',
-//     rating: 4.9,
-//     reviews: 550,
-//     image: 'https://www.shutterstock.com/image-photo/lava-cake-chocolate-coming-out-600nw-2500970875.jpg',
-//     isFavorite: true,
-//     calories: 550,
-//     prepTime: '5-10 min',
-//     location: '17 Purple Place',
-//     restaurantName: 'Sweet Delights',
-//   },
-//   {
-//     id: 'P106',
-//     name: 'Fresh Sushi Platter',
-//     price: 25.00,
-//     quantity: 2,
-//     description: 'Assortment of fresh sashimi, nigiri, and maki rolls, served with wasabi, pickled ginger, and soy sauce.',
-//     rating: 4.8,
-//     reviews: 410,
-//     image: 'https://media.istockphoto.com/id/177096343/photo/sushi-and-chopsticks-on-a-white-plate.jpg?s=612x612&w=0&k=20&c=ZrJGDES6fri8HnmLNFZBJY89kEbfeqCa_CkM78reYZY=',
-//     isFavorite: true,
-//     calories: 590,
-//     prepTime: '30-40 min',
-//     location: '30 Aqua Lane',
-//     restaurantName: 'Koi Pond',
-//   },
-//   {
-//     id: 'P108',
-//     name: 'Chicken Tikka',
-//     price: 19.99,
-//     quantity: 3,
-//     description: 'Tender chunks of chicken marinated in spices and yogurt, baked and served in a creamy, richly flavored tomato sauce.',
-//     rating: 4.4,
-//     reviews: 280,
-//     image: 'https://thumbs.dreamstime.com/b/fresh-chicken-tikka-kebab-isolated-white-background-fresh-chicken-tikka-kebab-isolated-white-background-357050525.jpg',
-//     isFavorite: false,
-//     calories: 910,
-//     prepTime: '35-45 min',
-//     location: '9 Green Valley',
-//     restaurantName: 'Spice Route',
-//   },
-// ];
-
-// --- Other Charges ---
 const DELIVERY_FEE = 5.0;
 const TAX_RATE = 0.05; // 5% tax
 
 // ---------------------------------------------------
 
 const CartScreen = ({ navigation }) => {
-  // const [cartItems, setCartItems] = useState(INITIAL_CART_ITEMS);
   const [subtotal, setSubtotal] = useState(0);
   const [taxAmount, setTaxAmount] = useState(0);
   const { cartItems, updateItemQuantity, deleteAllCarts, isLoading } = useCartStorage();
